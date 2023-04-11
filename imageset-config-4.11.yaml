@@ -1,0 +1,133 @@
+apiVersion: mirror.openshift.io/v1alpha2
+kind: ImageSetConfiguration
+storageConfig:
+  registry:
+    imageURL: 'registry.example.com/namespace/repository'
+    skipTLS: true
+mirror:
+  helm:
+    repositories:
+      - name: redhat-cop
+        url: https://redhat-cop.github.io/helm-charts
+        charts:
+          - name: openshift-logforwarding-splunk
+  platform:
+    channels:
+      - name: 'eus-4.8'
+        type: ocp
+        minVersion: '4.8.48'
+      - name: 'stable-4.8'
+        type: ocp
+        minVersion: '4.8.24'
+      - name: 'eus-4.10'
+        type: ocp
+        minVersion: '4.10.30'
+      - name: 'stable-4.10'
+        type: ocp
+        minVersion: '4.10.30'
+    graph: false
+  operators:
+    - catalog: 'registry.redhat.io/redhat/redhat-operator-index:v4.8'
+      packages:
+        - name: amq-streams
+        - name: cincinnati-operator
+        - name: cluster-kube-descheduler-operator
+        - name: cluster-logging
+        - name: codeready-workspaces
+        - name: datagrid
+        - name: elasticsearch-operator
+        - name: local-storage-operator
+        - name: ocs-operator
+          channels:
+            - name: 'eus-4.8'
+              minVersion: '4.8.14'
+              maxVersion: '4.8.14'
+            - name: 'stable-4.8'
+              minVersion: '4.8.14'
+              maxVersion: '4.8.14'
+        - name: quay-operator
+        - name: red-hat-camel-k
+    - catalog: 'registry.redhat.io/redhat/redhat-operator-index:v4.10'
+      packages:
+        - name: advanced-cluster-management
+        - name: amq-streams
+        - name: ansible-automation-platform-operator
+        - name: ansible-cloud-addons-operator
+        - name: cincinnati-operator
+        - name: cluster-kube-descheduler-operator
+        - name: cluster-logging
+        - name: codeready-workspaces
+        - name: datagrid
+        - name: elasticsearch-operator
+        - name: jaeger-product
+        - name: kiali-ossm
+        - name: kubernetes-nmstate-operator
+        - name: local-storage-operator
+        - name: mcg-operator
+          channels:
+            - name: 'stable-4.10'
+              minVersion: '4.10.5'
+              maxVersion: '4.10.5'
+        - name: ocs-operator
+          channels:
+            - name: 'stable-4.10'
+              minVersion: '4.10.5'
+              maxVersion: '4.10.5'
+        - name: odf-csi-addons-operator
+          channels:
+            - name: 'stable-4.10'
+              minVersion: '4.10.5'
+              maxVersion: '4.10.5'
+        - name: odf-lvm-operator
+          channels:
+            - name: 'stable-4.10'
+              minVersion: '4.10.5'
+              maxVersion: '4.10.5'
+        - name: odf-multicluster-orchestrator
+          channels:
+            - name: 'stable-4.10'
+              minVersion: '4.10.5'
+              maxVersion: '4.10.5'
+        - name: odf-operator
+          channels:
+            - name: 'stable-4.10'
+              minVersion: '4.10.5'
+              maxVersion: '4.10.5'
+        - name: quay-operator
+        - name: red-hat-camel-k
+        - name: rhacs-operator
+        - name: servicemeshoperator
+  additionalImages:
+    # Red Hat troubleshooting images
+    - name: registry.redhat.io/rhel8/support-tools:latest
+    # Data collection for OpenShift Virtualization
+    #- name: registry.redhat.io/container-native-virtualization/cnv-must-gather-rhel8:v4.8.6
+    #- name: registry.redhat.io/container-native-virtualization/cnv-must-gather-rhel8:v4.10.5
+    # Data collection for OpenShift Serverless
+    #- name: registry.redhat.io/openshift-serverless-1/svls-must-gather-rhel8:latest
+    # Data collection for Red Hat OpenShift Service Mesh
+    #- name: registry.redhat.io/openshift-service-mesh/istio-must-gather-rhel8:latest
+    # Data collection for the Migration Toolkit for Containers
+    #- name: registry.redhat.io/rhmtc/openshift-migration-must-gather-rhel8:v1.7
+    # Data collection for Red Hat OpenShift Container Storage
+    - name: registry.redhat.io/ocs4/ocs-must-gather-rhel8:v4.8
+    # Data collection for Red Hat OpenShift Data Foundation
+    - name: registry.redhat.io/odf4/ocs-must-gather-rhel8:v4.9
+    - name: registry.redhat.io/odf4/ocs-must-gather-rhel8:v4.10
+    # Data collection for OpenShift Logging
+    - name: registry.redhat.io/openshift-logging/cluster-logging-rhel8-operator:latest
+    # Data collection for Local Storage Operator
+    - name: registry.redhat.io/openshift4/ose-local-storage-mustgather-rhel8:latest
+    # OCP origin-cli images
+    - name: quay.io/openshift/origin-cli:4.8
+    - name: quay.io/openshift/origin-cli:4.10
+    - name: quay.io/openshift/origin-cli:latest
+    # Netowrk troubleshooting image
+    - name: docker.io/wbitt/network-multitool:latest
+    # ubi8 images
+    - name: registry.redhat.io/ubi8/ubi:latest
+    # F5 bigip-ctlr
+    - name: docker.io/f5networks/k8s-bigip-ctlr:2.7.1
+    - name: docker.io/f5networks/k8s-bigip-ctlr:2.8.1
+    - name: docker.io/f5networks/k8s-bigip-ctlr:2.10.0
+    

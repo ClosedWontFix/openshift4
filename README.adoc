@@ -1,0 +1,7 @@
+= openshift4
+
+This repo is pretty much just for my use.  I've placed some scripts and lists of commands that I may have found useful at one time or another.  They might work.  They might not.  They may be complete wrong and destroy all your data, or provoke nuclear war.
+
+There may also be some raw notes that make sense to me, and not to anyone else.
+
+Use at your own risk.

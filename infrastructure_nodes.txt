@@ -1,0 +1,246 @@
+# https://access.redhat.com/solutions/5034771
+
+oc adm taint nodes -l node-role.kubernetes.io/infra,cluster.ocs.openshift.io/openshift-storage!= node-role.kubernetes.io/infra=reserved:NoSchedule node-role.kubernetes.io/infra=reserved:NoExecute
+
+# Or - This needs testing
+cat > patch-infra-nodes.yaml << EOF
+metadata:
+  labels:
+    node-role.kubernetes.io/infra: ""
+spec:
+  taints:
+  - key: node-role.kubernetes.io/infra
+    value: reserved
+    effect: NoSchedule
+  - key: node-role.kubernetes.io/infra
+    value: reserved
+    effect: NoExecute
+EOF
+oc patch node -l node-role.kubernetes.io/infra,cluster.ocs.openshift.io/openshift-storage!= --type merge --patch-file patch-infra-nodes.yaml
+
+
+
+# Configure IngressController
+oc patch ingresscontroller/default -n  openshift-ingress-operator  --type=merge -p '{"spec":{"nodePlacement": {"nodeSelector": {"matchLabels": {"node-role.kubernetes.io/infra": ""}},"tolerations": [{"effect":"NoSchedule","key": "node-role.kubernetes.io/infra","value": "reserved"},{"effect":"NoExecute","key": "node-role.kubernetes.io/infra","value": "reserved"}]}}}'
+
+# Or - This needs testing
+cat > patch-ingresscontroller.yaml << EOF
+spec:
+  nodePlacement:
+    nodeSelector:
+      matchLabels:
+        node-role.kubernetes.io/infra: ""
+    tolerations:
+    - key: node-role.kubernetes.io/infra
+      value: reserved
+      effect: NoSchedule
+    - key: node-role.kubernetes.io/infra
+      value: reserved
+      effect: NoExecute
+EOF
+oc patch ingresscontroller default -n  openshift-ingress-operator  --type=merge --patch-file patch-ingresscontroller.yaml
+
+oc delete pods --all -n openshift-ingress-operator
+oc delete pods --all -n openshift-ingress
+
+# Configure ImageRegistry
+oc patch configs.imageregistry.operator.openshift.io/cluster --type=merge -p '{"spec":{"nodeSelector": {"node-role.kubernetes.io/infra": ""},"tolerations": [{"effect":"NoSchedule","key": "node-role.kubernetes.io/infra","value": "reserved"},{"effect":"NoExecute","key": "node-role.kubernetes.io/infra","value": "reserved"}]}}'
+
+# Or - This needs testing
+cat > patch-imageregistry.yaml << EOF
+spec:
+  nodeSelector:
+    node-role.kubernetes.io/infra: ""
+  tolerations:
+  - key: node-role.kubernetes.io/infra
+    value: reserved
+    effect: NoSchedule
+  - key: node-role.kubernetes.io/infra
+    value: reserved
+    effect: NoExecute
+EOF
+oc patch configs.imageregistry.operator.openshift.io cluster --type=merge --patch-file patch-imageregistry.yaml
+
+
+oc delete pods --all -n openshift-image-registry
+
+
+cat > cluster-monitoring-configmap.yaml << EOF
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cluster-monitoring-config
+  namespace: openshift-monitoring
+data:
+  config.yaml: |+
+    alertmanagerMain:
+      nodeSelector:
+        node-role.kubernetes.io/infra: ""
+      tolerations:
+      - key: node-role.kubernetes.io/infra
+        value: reserved
+        effect: NoSchedule
+      - key: node-role.kubernetes.io/infra
+        value: reserved
+        effect: NoExecute
+    prometheusK8s:
+      nodeSelector:
+        node-role.kubernetes.io/infra: ""
+      tolerations:
+      - key: node-role.kubernetes.io/infra
+        value: reserved
+        effect: NoSchedule
+      - key: node-role.kubernetes.io/infra
+        value: reserved
+        effect: NoExecute
+    prometheusOperator:
+      nodeSelector:
+        node-role.kubernetes.io/infra: ""
+      tolerations:
+      - key: node-role.kubernetes.io/infra
+        value: reserved
+        effect: NoSchedule
+      - key: node-role.kubernetes.io/infra
+        value: reserved
+        effect: NoExecute
+    grafana:
+      nodeSelector:
+        node-role.kubernetes.io/infra: ""
+      tolerations:
+      - key: node-role.kubernetes.io/infra
+        value: reserved
+        effect: NoSchedule
+      - key: node-role.kubernetes.io/infra
+        value: reserved
+        effect: NoExecute
+    k8sPrometheusAdapter:
+      nodeSelector:
+        node-role.kubernetes.io/infra: ""
+      tolerations:
+      - key: node-role.kubernetes.io/infra
+        value: reserved
+        effect: NoSchedule
+      - key: node-role.kubernetes.io/infra
+        value: reserved
+        effect: NoExecute
+    kubeStateMetrics:
+      nodeSelector:
+        node-role.kubernetes.io/infra: ""
+      tolerations:
+      - key: node-role.kubernetes.io/infra
+        value: reserved
+        effect: NoSchedule
+      - key: node-role.kubernetes.io/infra
+        value: reserved
+        effect: NoExecute
+    telemeterClient:
+      nodeSelector:
+        node-role.kubernetes.io/infra: ""
+      tolerations:
+      - key: node-role.kubernetes.io/infra
+        value: reserved
+        effect: NoSchedule
+      - key: node-role.kubernetes.io/infra
+        value: reserved
+        effect: NoExecute
+    openshiftStateMetrics:
+      nodeSelector:
+        node-role.kubernetes.io/infra: ""
+      tolerations:
+      - key: node-role.kubernetes.io/infra
+        value: reserved
+        effect: NoSchedule
+      - key: node-role.kubernetes.io/infra
+        value: reserved
+        effect: NoExecute
+    thanosQuerier:
+      nodeSelector:
+        node-role.kubernetes.io/infra: ""
+      tolerations:
+      - key: node-role.kubernetes.io/infra
+        value: reserved
+        effect: NoSchedule
+      - key: node-role.kubernetes.io/infra
+        value: reserved
+        effect: NoExecute
+EOF
+oc apply -f cluster-monitoring-configmap.yaml
+
+
+# Configure Logging
+# https://docs.openshift.com/container-platform/4.8/logging/config/cluster-logging-tolerations.html
+
+cat > patch-openshift-logging-infra-nodes.yaml << EOF
+spec:
+  curation:
+    curator:
+      nodeSelector:
+        node-role.kubernetes.io/infra: ""
+      tolerations:
+      - key: node-role.kubernetes.io/infra
+        value: reserved
+        effect: NoSchedule
+      - key: node-role.kubernetes.io/infra
+        value: reserved
+        effect: NoExecute
+  logStore:
+    elasticsearch:
+      nodeSelector:
+        node-role.kubernetes.io/infra: ""
+      tolerations:
+      - key: node-role.kubernetes.io/infra
+        value: reserved
+        effect: NoSchedule
+      - key: node-role.kubernetes.io/infra
+        value: reserved
+        effect: NoExecute
+  visualization:
+    kibana:
+      nodeSelector:
+        node-role.kubernetes.io/infra: ""
+      tolerations:
+      - key: node-role.kubernetes.io/infra
+        value: reserved
+        effect: NoSchedule
+      - key: node-role.kubernetes.io/infra
+        value: reserved
+        effect: NoExecute
+EOF
+oc patch clusterlogging instance -n openshift-logging --type merge --patch-file patch-openshift-logging-infra-nodes.yaml
+
+# Configure OCS/ODF
+# https://access.redhat.com/documentation/en-us/red_hat_openshift_data_foundation/4.10/html/managing_and_allocating_storage_resources/managing-container-storage-interface-component-placements_rhodf#doc-wrapper
+
+oc patch cm rook-ceph-operator-config -n openshift-storage --type merge -p '{"data":{"CSI_PLUGIN_TOLERATIONS":"\n- key: node-role.kubernetes.io/infra\n  operator: Equal\n  value: reserved\n  effect: NoExecute\n- key: node-role.kubernetes.io/infra\n  operator: Equal\n  value: reserved\n  effect: NoSchedule\n- key: node.ocs.openshift.io/storage\n  operator: Equal\n  value: \"true\"\n  effect: NoSchedule","CSI_PROVISIONER_TOLERATIONS":"\n- key: node-role.kubernetes.io/infra\n  operator: Equal\n  value: reserved\n  effect: NoExecute\n- key: node-role.kubernetes.io/infra\n  operator: Equal\n  value: reserved\n  effect: NoSchedule\n- key: node.ocs.openshift.io/storage\n  operator: Equal\n  value: \"true\"\n  effect: NoSchedule"}}'
+cat > patch-ocs-infra-nodes.yaml << EOF
+data:
+  CSI_PLUGIN_TOLERATIONS: |2-
+
+    - key: node-role.kubernetes.io/infra
+      operator: Equal
+      value: reserved
+      effect: NoExecute
+    - key: node-role.kubernetes.io/infra
+      operator: Equal
+      value: reserved
+      effect: NoSchedule
+    - key: node.ocs.openshift.io/storage
+      operator: Equal
+      value: "true"
+      effect: NoSchedule
+  CSI_PROVISIONER_TOLERATIONS: |2-
+
+    - key: node-role.kubernetes.io/infra
+      operator: Equal
+      value: reserved
+      effect: NoExecute
+    - key: node-role.kubernetes.io/infra
+      operator: Equal
+      value: reserved
+      effect: NoSchedule
+    - key: node.ocs.openshift.io/storage
+      operator: Equal
+      value: "true"
+      effect: NoSchedule
+EOF
+oc patch cm rook-ceph-operator-config -n openshift-storage --type=merge --patch-file patch-ocs-infra-nodes.yaml
