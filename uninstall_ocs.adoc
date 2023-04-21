@@ -4,11 +4,13 @@ Red Hat documentation +
 https://access.redhat.com/documentation/en-us/red_hat_openshift_container_storage/4.8/html/deploying_openshift_container_storage_on_vmware_vsphere/assembly_uninstalling-openshift-container-storage_rhocs#uninstalling-openshift-container-storage-in-internal-mode_rhocs
 
 Delete the StorageCluster object.
+[source,bash]
 ----
 oc delete -n openshift-storage storagecluster --all --wait=true
 ----
 
 Remove CustomResourceDefinitions
+[source,bash]
 ----
 oc delete \
   bucketclasses.noobaa.io \
@@ -29,11 +31,13 @@ oc delete \
 ----
 
 Delete remaining pods, deamonsets, replicasets, deployment.apps, and services
+[source,bash]
 ----
 oc delete pods,jobs,ds,rs,statefulset,hpa,deployment.apps,jobs,service,route,cm,secrets --all -n openshift-storage
 ----
 
 Delete openshift-storage namespace
+[source,bash]
 ----
 oc patch ns openshift-storage --type=merge -p '{"spec": {"finalizers":null}}'
 oc patch ns openshift-storage --type json --patch='[ { "op": "remove", "path": "/spec/finalizers" } ]'
@@ -41,16 +45,19 @@ oc delete ns openshift-storage
 ----
 
 If the namespace is stuck in terminating status, then list the remaining resources in the namespace
+[source,bash]
 ----
 oc api-resources --verbs=list --namespaced -o name | sort | grep -Ev 'events|packagemanifest' | xargs -t -n 1 oc get --show-kind --ignore-not-found -n openshift-storage
 ----
 
 Delete storage classes
+[source,bash]
 ----
 oc delete storageclasses local-storage
 ----
 
 Delete localVolumeSets
+[source,bash]
 ----
 oc delete localvolumesets --all -n openshift-local-storage
 oc delete localvolumediscoveries --all -n openshift-local-storage
@@ -58,11 +65,13 @@ oc delete localvolumediscoveries --all -n openshift-local-storage
 
 When reinstalling OCS/ODF...
 Enable rook-ceph-tools
+[source,bash]
 ----
 oc patch OCSInitialization ocsinit -n openshift-storage --type json --patch '[{ "op": "replace", "path": "/spec/enableCephTools", "value": true }]'
 ----
 
 If you need to disable noobaa - need to fix this, it doesnt work
+[source,bash]
 ----
 oc patch storagecluster ocs-storagecluster -n openshift-storage --type json --patch '[{ "op": "add", "path": "/spec/multiCloudGateway/reconcileStrategy", "value": ignore }]'
 ----

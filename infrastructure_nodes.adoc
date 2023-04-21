@@ -1,10 +1,12 @@
 https://access.redhat.com/solutions/5034771
 
+[source,bash]
 ----
 oc adm taint nodes -l node-role.kubernetes.io/infra,cluster.ocs.openshift.io/openshift-storage!= node-role.kubernetes.io/infra=reserved:NoSchedule node-role.kubernetes.io/infra=reserved:NoExecute
 ----
 
 Or - This needs testing
+[source,bash]
 ----
 cat > patch-infra-nodes.yaml << EOF
 metadata:
@@ -24,11 +26,13 @@ oc patch node -l node-role.kubernetes.io/infra,cluster.ocs.openshift.io/openshif
 
 
 Configure IngressController
+[source,bash]
 ----
 oc patch ingresscontroller/default -n  openshift-ingress-operator  --type=merge -p '{"spec":{"nodePlacement": {"nodeSelector": {"matchLabels": {"node-role.kubernetes.io/infra": ""}},"tolerations": [{"effect":"NoSchedule","key": "node-role.kubernetes.io/infra","value": "reserved"},{"effect":"NoExecute","key": "node-role.kubernetes.io/infra","value": "reserved"}]}}}'
 ----
 
 Or - This needs testing
+[source,bash]
 ----
 cat > patch-ingresscontroller.yaml << EOF
 spec:
@@ -51,11 +55,13 @@ oc delete pods --all -n openshift-ingress
 ----
 
 Configure ImageRegistry
+[source,bash]
 ----
 oc patch configs.imageregistry.operator.openshift.io/cluster --type=merge -p '{"spec":{"nodeSelector": {"node-role.kubernetes.io/infra": ""},"tolerations": [{"effect":"NoSchedule","key": "node-role.kubernetes.io/infra","value": "reserved"},{"effect":"NoExecute","key": "node-role.kubernetes.io/infra","value": "reserved"}]}}'
 ----
 
 Or - This needs testing
+[source,bash]
 ----
 cat > patch-imageregistry.yaml << EOF
 spec:
@@ -73,6 +79,7 @@ oc patch configs.imageregistry.operator.openshift.io cluster --type=merge --patc
 oc delete pods --all -n openshift-image-registry
 ----
 
+[source,bash]
 ----
 cat > cluster-monitoring-configmap.yaml << EOF
 apiVersion: v1
@@ -179,6 +186,7 @@ oc apply -f cluster-monitoring-configmap.yaml
 
 Configure Logging +
 https://docs.openshift.com/container-platform/4.8/logging/config/cluster-logging-tolerations.html
+[source,bash]
 ----
 cat > patch-openshift-logging-infra-nodes.yaml << EOF
 spec:
@@ -221,9 +229,12 @@ oc patch clusterlogging instance -n openshift-logging --type merge --patch-file 
 
 Configure OCS/ODF +
 https://access.redhat.com/documentation/en-us/red_hat_openshift_data_foundation/4.10/html/managing_and_allocating_storage_resources/managing-container-storage-interface-component-placements_rhodf#doc-wrapper
+[source,bash]
 ----
 oc patch cm rook-ceph-operator-config -n openshift-storage --type merge -p '{"data":{"CSI_PLUGIN_TOLERATIONS":"\n- key: node-role.kubernetes.io/infra\n  operator: Equal\n  value: reserved\n  effect: NoExecute\n- key: node-role.kubernetes.io/infra\n  operator: Equal\n  value: reserved\n  effect: NoSchedule\n- key: node.ocs.openshift.io/storage\n  operator: Equal\n  value: \"true\"\n  effect: NoSchedule","CSI_PROVISIONER_TOLERATIONS":"\n- key: node-role.kubernetes.io/infra\n  operator: Equal\n  value: reserved\n  effect: NoExecute\n- key: node-role.kubernetes.io/infra\n  operator: Equal\n  value: reserved\n  effect: NoSchedule\n- key: node.ocs.openshift.io/storage\n  operator: Equal\n  value: \"true\"\n  effect: NoSchedule"}}'
 ----
+
+[source,bash]
 ----
 cat > patch-ocs-infra-nodes.yaml << EOF
 data:
