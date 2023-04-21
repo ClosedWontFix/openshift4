@@ -1,6 +1,6 @@
 = Uninstall OCS/ODF
 
-Red Hat documentation
+Red Hat documentation +
 https://access.redhat.com/documentation/en-us/red_hat_openshift_container_storage/4.8/html/deploying_openshift_container_storage_on_vmware_vsphere/assembly_uninstalling-openshift-container-storage_rhocs#uninstalling-openshift-container-storage-in-internal-mode_rhocs
 
 Delete the StorageCluster object.
