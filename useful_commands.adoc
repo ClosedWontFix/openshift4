@@ -1,0 +1,19 @@
+# Useful openshift commands
+
+List any pods that are having issues
+---
+oc get pods -A | grep -Ev 'Running|Completed'
+---
+
+
+# Orphaned pods
+# https://access.redhat.com/solutions/5512711
+----
+for n in $(oc get nodes -o name); do oc adm node-logs $n -u kubelet | grep orphaned | tee -a orphaned-pod-logs.txt; done
+----
+
+----
+rm -rf /var/lib/kubelet/pods/$(journalctl -l -u kubelet | grep orphan | tail -1 | awk -F\" '{ print $5 }' | sed 's/\\//g')/volumes/
+----
+
+
