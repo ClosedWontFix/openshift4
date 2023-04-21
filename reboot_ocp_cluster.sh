@@ -5,7 +5,7 @@
 # File: reboot_ocp_cluster.sh
 #
 # Author: ClosedWontFix
-# Email: closedwontfix@protonmail.com
+# https://github.com/ClosedWontFix
 #
 # This script is offered as reference only.
 # No warranty is expressed or implied.  
