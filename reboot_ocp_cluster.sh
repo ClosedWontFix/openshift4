@@ -1,22 +1,5 @@
 #!/bin/bash
 
-#============================================================================#
-#
-# File: reboot_ocp_cluster.sh
-#
-# Author: ClosedWontFix
-# https://github.com/ClosedWontFix
-#
-# This script is offered as reference only.
-# No warranty is expressed or implied.  
-# Use at your own risk.
-# 
-# Description: Somewhat graceful rolling reboot of OCP 4 cluster.
-#
-# Created: 07-19-2022
-#
-#============================================================================#
-
 #Are you logged into a OCP cluster?
 oc whoami > /dev/null 2>&1
 if [[ $? != '0' ]]; then

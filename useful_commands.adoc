@@ -1,6 +1,7 @@
 = Useful openshift commands
 
 List any pods that are having issues
+[source,bash]
 ----
 oc get pods -A | grep -Ev 'Running|Completed'
 ----
@@ -8,15 +9,18 @@ oc get pods -A | grep -Ev 'Running|Completed'
 
 Orphaned pods
 https://access.redhat.com/solutions/5512711
+[source,bash]
 ----
 for n in $(oc get nodes -o name); do oc adm node-logs $n -u kubelet | grep orphaned | tee -a orphaned-pod-logs.txt; done
 ----
 
+[source,bash]
 ----
 rm -rf /var/lib/kubelet/pods/$(journalctl -l -u kubelet | grep orphan | tail -1 | awk -F\" '{ print $5 }' | sed 's/\\//g')/volumes/
 ----
 
 Watch cluster upgrade status
+[source,bash]
 ----
 watch "echo -e \"\nCLUSTER UPGRADE STATUS\n\"; \
   oc get clusterversion; \
