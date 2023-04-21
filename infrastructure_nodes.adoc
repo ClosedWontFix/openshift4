@@ -223,6 +223,8 @@ Configure OCS/ODF +
 https://access.redhat.com/documentation/en-us/red_hat_openshift_data_foundation/4.10/html/managing_and_allocating_storage_resources/managing-container-storage-interface-component-placements_rhodf#doc-wrapper
 ----
 oc patch cm rook-ceph-operator-config -n openshift-storage --type merge -p '{"data":{"CSI_PLUGIN_TOLERATIONS":"\n- key: node-role.kubernetes.io/infra\n  operator: Equal\n  value: reserved\n  effect: NoExecute\n- key: node-role.kubernetes.io/infra\n  operator: Equal\n  value: reserved\n  effect: NoSchedule\n- key: node.ocs.openshift.io/storage\n  operator: Equal\n  value: \"true\"\n  effect: NoSchedule","CSI_PROVISIONER_TOLERATIONS":"\n- key: node-role.kubernetes.io/infra\n  operator: Equal\n  value: reserved\n  effect: NoExecute\n- key: node-role.kubernetes.io/infra\n  operator: Equal\n  value: reserved\n  effect: NoSchedule\n- key: node.ocs.openshift.io/storage\n  operator: Equal\n  value: \"true\"\n  effect: NoSchedule"}}'
+----
+----
 cat > patch-ocs-infra-nodes.yaml << EOF
 data:
   CSI_PLUGIN_TOLERATIONS: |2-
