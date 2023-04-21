@@ -18,5 +18,12 @@ rm -rf /var/lib/kubelet/pods/$(journalctl -l -u kubelet | grep orphan | tail -1 
 
 Watch cluster upgrade status
 ----
-watch "echo -e \"\nCLUSTER UPGRADE STATUS\n\"; oc get clusterversion; echo -e \"\nCLUSTER OPERATORS PENDING UPGRADE\n\"; oc get co --no-headers | grep -Ev \"4.12.6.*.True.*.False.*.False\"; echo -e \"\nNODES PENDING UPGRADE\n\"; oc get nodes --no-headers | grep -Ewi \"notready|schedulingdisabled|v1.25.4\+a34b9e9\"; echo -e \"\nMACHINE CONFIG POOL STATUS\n\"; oc get mcp --no-headers"
+watch "echo -e \"\nCLUSTER UPGRADE STATUS\n\"; \
+  oc get clusterversion; \
+  echo -e \"\nCLUSTER OPERATORS PENDING UPGRADE\n\"; \
+  oc get co --no-headers | grep -Ev \"4.12.6.*.True.*.False.*.False\"; \
+  echo -e \"\nNODES PENDING UPGRADE\n\"; \
+  oc get nodes --no-headers | grep -Ewi \"notready|schedulingdisabled|v1.25.4\+a34b9e9\"; \
+  echo -e \"\nMACHINE CONFIG POOL STATUS\n\"; \
+  oc get mcp --no-headers"
 ----
