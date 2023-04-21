@@ -1,4 +1,4 @@
-# Useful openshift commands
+= Useful openshift commands
 
 List any pods that are having issues
 ---
@@ -6,8 +6,8 @@ oc get pods -A | grep -Ev 'Running|Completed'
 ---
 
 
-# Orphaned pods
-# https://access.redhat.com/solutions/5512711
+Orphaned pods
+https://access.redhat.com/solutions/5512711
 ----
 for n in $(oc get nodes -o name); do oc adm node-logs $n -u kubelet | grep orphaned | tee -a orphaned-pod-logs.txt; done
 ----
@@ -16,4 +16,7 @@ for n in $(oc get nodes -o name); do oc adm node-logs $n -u kubelet | grep orpha
 rm -rf /var/lib/kubelet/pods/$(journalctl -l -u kubelet | grep orphan | tail -1 | awk -F\" '{ print $5 }' | sed 's/\\//g')/volumes/
 ----
 
-
+Watch cluster upgrade status
+----
+watch "echo -e \"\nCLUSTER UPGRADE STATUS\n\"; oc get clusterversion; echo -e \"\nCLUSTER OPERATORS PENDING UPGRADE\n\"; oc get co --no-headers | grep -Ev \"4.12.6.*.True.*.False.*.False\"; echo -e \"\nNODES PENDING UPGRADE\n\"; oc get nodes --no-headers | grep -Ewi \"notready|schedulingdisabled|v1.25.4\+a34b9e9\"; echo -e \"\nMACHINE CONFIG POOL STATUS\n\"; oc get mcp --no-headers"
+----
