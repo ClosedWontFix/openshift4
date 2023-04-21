@@ -1,9 +1,9 @@
 = Useful openshift commands
 
 List any pods that are having issues
----
+----
 oc get pods -A | grep -Ev 'Running|Completed'
----
+----
 
 
 Orphaned pods
