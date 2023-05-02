@@ -20,7 +20,7 @@ for node in ${MASTER_NODES}; do
   echo "Attempting to drain ${node}..."
   oc adm drain ${node} --ignore-daemonsets --delete-emptydir-data --disable-eviction --force > /dev/null 2>&1
   if [[ $? -eq 0 ]]; then
-                ssh -o StrictHostKeyChecking=no core@${node} "sudo reboot"
+                ssh -o StrictHostKeyChecking=no core@${node} "sudo reboot" > /dev/null 2>&1
                 #Need to update this script to drain nodes before rebooting nodes
                 #oc debug node/${node} -- chroot /host reboot
                 sleep 180
@@ -41,7 +41,7 @@ if [[ -n ${OCS_NODES} ]]; then
                 echo "Attempting to drain ${node}..."
     oc adm drain ${node} --ignore-daemonsets --delete-emptydir-data --disable-eviction --force > /dev/null 2>&1
     if [[ $? -eq 0 ]]; then
-                        ssh -o StrictHostKeyChecking=no core@${node} "sudo reboot"
+                        ssh -o StrictHostKeyChecking=no core@${node} "sudo reboot" > /dev/null 2>&1
                         #oc debug node/${node} -- chroot /host reboot
                         sleep 180
                         oc adm uncordon ${node} > /dev/null 2>&1
@@ -64,7 +64,7 @@ if [[ -n ${INFRA_NODES} ]]; then
                 echo "Attempting to drain ${node}..."
     oc adm drain ${node} --ignore-daemonsets --delete-emptydir-data --disable-eviction --force > /dev/null 2>&1
     if [[ $? -eq 0 ]]; then
-                        ssh -o StrictHostKeyChecking=no core@${node} "sudo reboot"
+                        ssh -o StrictHostKeyChecking=no core@${node} "sudo reboot" > /dev/null 2>&1
                         #oc debug node/${node} -- chroot /host reboot
                         sleep 120
                         oc adm uncordon ${node} > /dev/null 2>&1
@@ -87,7 +87,7 @@ if [[ -n ${WORKER_NODES} ]]; then
                 echo "Attempting to drain ${node}..."
     oc adm drain ${node} --ignore-daemonsets --delete-emptydir-data --disable-eviction --force > /dev/null 2>&1
     if [[ $? -eq 0 ]]; then
-                        ssh -o StrictHostKeyChecking=no core@${node} "sudo reboot"
+                        ssh -o StrictHostKeyChecking=no core@${node} "sudo reboot" > /dev/null 2>&1
                         #oc debug node/${node} -- chroot /host reboot
                         sleep 60
                         oc adm uncordon ${node} > /dev/null 2>&1
