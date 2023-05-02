@@ -23,11 +23,11 @@ for node in ${MASTER_NODES}; do
                 ssh -o StrictHostKeyChecking=no core@${node} "sudo reboot"
                 #Need to update this script to drain nodes before rebooting nodes
                 #oc debug node/${node} -- chroot /host reboot
-                sleep 60
+                sleep 180
                 oc adm uncordon ${node}
                 echo
                 until ping -c 1 -t 1 ${node}; do
-                        sleep 60
+                        sleep 120
                 done
         else
                 echo "${node} failed to drain."
@@ -43,11 +43,11 @@ if [[ -n ${OCS_NODES} ]]; then
     if [[ $? -eq 0 ]]; then
                         ssh -o StrictHostKeyChecking=no core@${node} "sudo reboot"
                         #oc debug node/${node} -- chroot /host reboot
-                        sleep 60
+                        sleep 180
                         oc adm uncordon ${node}
                         echo
                         until ping -c 1 -t 1 ${node}; do
-                                sleep 60
+                                sleep 120
                         done
                 else
                         echo "${node} failed to drain."
@@ -66,7 +66,7 @@ if [[ -n ${INFRA_NODES} ]]; then
     if [[ $? -eq 0 ]]; then
                         ssh -o StrictHostKeyChecking=no core@${node} "sudo reboot"
                         #oc debug node/${node} -- chroot /host reboot
-                        sleep 60
+                        sleep 120
                         oc adm uncordon ${node}
                         echo
                         until ping -c 1 -t 1 ${node}; do
