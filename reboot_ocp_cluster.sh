@@ -18,15 +18,15 @@ WORKER_NODES=$(oc get nodes -l node-role.kubernetes.io/worker -o jsonpath='{.ite
 # Reboot master nodes
 for node in ${MASTER_NODES}; do
   echo "Attempting to drain ${node}..."
-  oc adm drain ${node} --ignore-daemonsets --delete-emptydir-data --disable-eviction --force
+  oc adm drain ${node} --ignore-daemonsets --delete-emptydir-data --disable-eviction --force > /dev/null 2>&1
   if [[ $? -eq 0 ]]; then
                 ssh -o StrictHostKeyChecking=no core@${node} "sudo reboot"
                 #Need to update this script to drain nodes before rebooting nodes
                 #oc debug node/${node} -- chroot /host reboot
                 sleep 180
-                oc adm uncordon ${node}
+                oc adm uncordon ${node} > /dev/null 2>&1
                 echo
-                until ping -c 1 -t 1 ${node}; do
+                until ping -c 1 -t 1 ${node} > /dev/null 2>&1; do
                         sleep 120
                 done
         else
@@ -39,14 +39,14 @@ done
 if [[ -n ${OCS_NODES} ]]; then
   for node in ${OCS_NODES}; do
                 echo "Attempting to drain ${node}..."
-    oc adm drain ${node} --ignore-daemonsets --delete-emptydir-data --disable-eviction --force
+    oc adm drain ${node} --ignore-daemonsets --delete-emptydir-data --disable-eviction --force > /dev/null 2>&1
     if [[ $? -eq 0 ]]; then
                         ssh -o StrictHostKeyChecking=no core@${node} "sudo reboot"
                         #oc debug node/${node} -- chroot /host reboot
                         sleep 180
-                        oc adm uncordon ${node}
+                        oc adm uncordon ${node} > /dev/null 2>&1
                         echo
-                        until ping -c 1 -t 1 ${node}; do
+                        until ping -c 1 -t 1 ${node} > /dev/null 2>&1; do
                                 sleep 120
                         done
                 else
@@ -62,14 +62,14 @@ fi
 if [[ -n ${INFRA_NODES} ]]; then
   for node in ${INFRA_NODES}; do
                 echo "Attempting to drain ${node}..."
-    oc adm drain ${node} --ignore-daemonsets --delete-emptydir-data --disable-eviction --force
+    oc adm drain ${node} --ignore-daemonsets --delete-emptydir-data --disable-eviction --force > /dev/null 2>&1
     if [[ $? -eq 0 ]]; then
                         ssh -o StrictHostKeyChecking=no core@${node} "sudo reboot"
                         #oc debug node/${node} -- chroot /host reboot
                         sleep 120
-                        oc adm uncordon ${node}
+                        oc adm uncordon ${node} > /dev/null 2>&1
                         echo
-                        until ping -c 1 -t 1 ${node}; do
+                        until ping -c 1 -t 1 ${node} > /dev/null 2>&1; do
                                 sleep 60
                         done
                 else
@@ -85,14 +85,14 @@ fi
 if [[ -n ${WORKER_NODES} ]]; then
   for node in ${WORKER_NODES}; do
                 echo "Attempting to drain ${node}..."
-    oc adm drain ${node} --ignore-daemonsets --delete-emptydir-data --disable-eviction --force
+    oc adm drain ${node} --ignore-daemonsets --delete-emptydir-data --disable-eviction --force > /dev/null 2>&1
     if [[ $? -eq 0 ]]; then
                         ssh -o StrictHostKeyChecking=no core@${node} "sudo reboot"
                         #oc debug node/${node} -- chroot /host reboot
                         sleep 60
-                        oc adm uncordon ${node}
+                        oc adm uncordon ${node} > /dev/null 2>&1
                         echo
-                        until ping -c 1 -t 1 ${node}; do
+                        until ping -c 1 -t 1 ${node} > /dev/null 2>&1; do
                                 sleep 60
                         done
                 else
