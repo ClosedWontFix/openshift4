@@ -18,7 +18,7 @@ WORKER_NODES=$(oc get nodes -l node-role.kubernetes.io/worker -o jsonpath='{.ite
 # Reboot master nodes
 for node in ${MASTER_NODES}; do
   echo "Attempting to drain ${node}..."
-  oc adm drain ${node} --ignore-daemonsets --delete-emptydir-data --disable-eviction --force > /dev/null 2>&1
+  oc adm drain ${node} --ignore-daemonsets --delete-emptydir-data --disable-eviction --force
   if [[ $? -eq 0 ]]; then
                 ssh -o StrictHostKeyChecking=no core@${node} "sudo reboot" > /dev/null 2>&1
                 #Need to update this script to drain nodes before rebooting nodes
@@ -39,7 +39,7 @@ done
 if [[ -n ${OCS_NODES} ]]; then
   for node in ${OCS_NODES}; do
                 echo "Attempting to drain ${node}..."
-    oc adm drain ${node} --ignore-daemonsets --delete-emptydir-data --disable-eviction --force > /dev/null 2>&1
+    oc adm drain ${node} --ignore-daemonsets --delete-emptydir-data --disable-eviction --force
     if [[ $? -eq 0 ]]; then
                         ssh -o StrictHostKeyChecking=no core@${node} "sudo reboot" > /dev/null 2>&1
                         #oc debug node/${node} -- chroot /host reboot
@@ -62,7 +62,7 @@ fi
 if [[ -n ${INFRA_NODES} ]]; then
   for node in ${INFRA_NODES}; do
                 echo "Attempting to drain ${node}..."
-    oc adm drain ${node} --ignore-daemonsets --delete-emptydir-data --disable-eviction --force > /dev/null 2>&1
+    oc adm drain ${node} --ignore-daemonsets --delete-emptydir-data --disable-eviction --force
     if [[ $? -eq 0 ]]; then
                         ssh -o StrictHostKeyChecking=no core@${node} "sudo reboot" > /dev/null 2>&1
                         #oc debug node/${node} -- chroot /host reboot
@@ -85,7 +85,7 @@ fi
 if [[ -n ${WORKER_NODES} ]]; then
   for node in ${WORKER_NODES}; do
                 echo "Attempting to drain ${node}..."
-    oc adm drain ${node} --ignore-daemonsets --delete-emptydir-data --disable-eviction --force > /dev/null 2>&1
+    oc adm drain ${node} --ignore-daemonsets --delete-emptydir-data --disable-eviction --force
     if [[ $? -eq 0 ]]; then
                         ssh -o StrictHostKeyChecking=no core@${node} "sudo reboot" > /dev/null 2>&1
                         #oc debug node/${node} -- chroot /host reboot
