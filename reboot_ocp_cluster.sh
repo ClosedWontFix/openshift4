@@ -11,44 +11,48 @@ if [[ $? != '0' ]]; then
 fi
 
 MASTER_NODES=$(oc get nodes -l node-role.kubernetes.io/master -o jsonpath='{.items[*].metadata.name}{"\n"}')
-MASTER_SLEEP=300
 OCS_NODES=$(oc get nodes -l cluster.ocs.openshift.io/openshift-storage= -o jsonpath='{.items[*].metadata.name}{"\n"}')
-OCS_SLEEP=180
 INFRA_NODES=$(oc get nodes -l node-role.kubernetes.io/infra,cluster.ocs.openshift.io/openshift-storage!= -o jsonpath='{.items[*].metadata.name}{"\n"}')
-INFRA_SLEEP=45
 WORKER_NODES=$(oc get nodes -l node-role.kubernetes.io/worker -o jsonpath='{.items[*].metadata.name}{"\n"}')
-WORKER_SLEEP=45
 
 # Reboot master nodes
 for node in ${MASTER_NODES}; do
-  echo "Rebooting ${node}..."
-  ssh -o StrictHostKeyChecking=no core@${node} "sudo reboot"
-  #Need to update this script to drain nodes before rebooting nodes
-  #oc adm drain ${node} --ignore-daemonsets --delete-emptydir-data
-  #oc debug node/${node} -- chroot /host reboot
-  #oc adm uncordon ${node}
-  echo
-  echo "Sleeping for ${MASTER_SLEEP} seconds."
-  echo "Current system time is $(date +'%T %Z')"
-  echo
-  echo "---"
-  echo
-  sleep ${MASTER_SLEEP}
+  echo "Attempting to drain ${node}..."
+  oc adm drain ${node} --ignore-daemonsets --delete-emptydir-data --disable-eviction --force
+  if [[ $? -eq 0 ]]; then
+                ssh -o StrictHostKeyChecking=no core@${node} "sudo reboot"
+                #Need to update this script to drain nodes before rebooting nodes
+                #oc debug node/${node} -- chroot /host reboot
+                sleep 60
+                oc adm uncordon ${node}
+                echo
+                until ping -c 1 -t 1 ${node}; do
+                        sleep 60
+                done
+        else
+                echo "${node} failed to drain."
+                exit
+        fi
 done
 
 # Reboot ocs nodes
 if [[ -n ${OCS_NODES} ]]; then
   for node in ${OCS_NODES}; do
-    echo "Rebooting ${node}..."
-    ssh -o StrictHostKeyChecking=no core@${node} "sudo reboot"
-    #oc debug node/${node} -- chroot /host reboot
-    echo
-    echo "Sleeping for ${OCS_SLEEP} seconds."
-    echo "Current system time is $(date +'%T %Z')"
-    echo
-    echo "---"
-    echo
-    sleep ${OCS_SLEEP}
+                echo "Attempting to drain ${node}..."
+    oc adm drain ${node} --ignore-daemonsets --delete-emptydir-data --disable-eviction --force
+    if [[ $? -eq 0 ]]; then
+                        ssh -o StrictHostKeyChecking=no core@${node} "sudo reboot"
+                        #oc debug node/${node} -- chroot /host reboot
+                        sleep 60
+                        oc adm uncordon ${node}
+                        echo
+                        until ping -c 1 -t 1 ${node}; do
+                                sleep 60
+                        done
+                else
+                        echo "${node} failed to drain."
+                        exit
+                fi
   done
 else
   echo "No OCS/ODF nodes were detected.  Moving on."
@@ -57,16 +61,21 @@ fi
 # Reboot infra nodes
 if [[ -n ${INFRA_NODES} ]]; then
   for node in ${INFRA_NODES}; do
-    echo "Rebooting ${node}..."
-    ssh -o StrictHostKeyChecking=no core@${node} "sudo reboot"
-    #oc debug node/${node} -- chroot /host reboot
-    echo
-    echo "Sleeping for ${INFRA_SLEEP} seconds."
-    echo "Current system time is $(date +'%T %Z')"
-    echo
-    echo "---"
-    echo
-    sleep ${INFRA_SLEEP}
+                echo "Attempting to drain ${node}..."
+    oc adm drain ${node} --ignore-daemonsets --delete-emptydir-data --disable-eviction --force
+    if [[ $? -eq 0 ]]; then
+                        ssh -o StrictHostKeyChecking=no core@${node} "sudo reboot"
+                        #oc debug node/${node} -- chroot /host reboot
+                        sleep 60
+                        oc adm uncordon ${node}
+                        echo
+                        until ping -c 1 -t 1 ${node}; do
+                                sleep 60
+                        done
+                else
+                        echo "${node} failed to drain."
+                        exit
+                fi
   done
 else
   echo "No infra nodes were detected.  Moving on."
@@ -75,16 +84,21 @@ fi
 # Reboot worker nodes
 if [[ -n ${WORKER_NODES} ]]; then
   for node in ${WORKER_NODES}; do
-    echo "Rebooting ${node}..."
-    ssh -o StrictHostKeyChecking=no core@${node} "sudo reboot"
-    #oc debug node/${node} -- chroot /host reboot
-    echo
-    echo "Sleeping for ${WORKER_SLEEP} seconds."
-    echo "Current system time is $(date +'%T %Z')"
-    echo
-    echo "---"
-    echo
-    sleep ${WORKER_SLEEP}
+                echo "Attempting to drain ${node}..."
+    oc adm drain ${node} --ignore-daemonsets --delete-emptydir-data --disable-eviction --force
+    if [[ $? -eq 0 ]]; then
+                        ssh -o StrictHostKeyChecking=no core@${node} "sudo reboot"
+                        #oc debug node/${node} -- chroot /host reboot
+                        sleep 60
+                        oc adm uncordon ${node}
+                        echo
+                        until ping -c 1 -t 1 ${node}; do
+                                sleep 60
+                        done
+                else
+                        echo "${node} failed to drain."
+                        exit
+                fi
   done
 else
   echo "No worker nodes were detected.  Moving on."
