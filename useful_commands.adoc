@@ -35,11 +35,11 @@ watch "echo -e \"\nCLUSTER UPGRADE STATUS\n\"; \
 Check api certificate
 [source,bash]
 ----
-openssl s_client -connect api.<cluster_name><domain>:6443 < /dev/null | openssl x509 -text
+openssl s_client -connect api.<cluster_name>.<domain>:6443 < /dev/null | openssl x509 -text
 ----
 
 Check ingress certificate
 [source,bash]
 ----
-openssl s_client -connect test.apps.<cluster_name><domain>:443 < /dev/null | openssl x509 -text
+openssl s_client -connect test.apps.<cluster_name>.<domain>:443 < /dev/null | openssl x509 -text
 ----
