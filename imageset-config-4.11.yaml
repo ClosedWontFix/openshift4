@@ -2,101 +2,98 @@ apiVersion: mirror.openshift.io/v1alpha2
 kind: ImageSetConfiguration
 storageConfig:
   registry:
-    imageURL: 'registry.example.com/namespace/repository'
+    imageURL: 'registry.example.com:5000/registry:latest'
     skipTLS: true
 mirror:
-  helm:
-    repositories:
-      - name: redhat-cop
-        url: https://redhat-cop.github.io/helm-charts
-        charts:
-          - name: openshift-logforwarding-splunk
   platform:
+    architectures:
+      - "amd64"
     channels:
-      - name: 'eus-4.8'
-        type: ocp
-        minVersion: '4.8.48'
-      - name: 'stable-4.8'
-        type: ocp
-        minVersion: '4.8.24'
-      - name: 'eus-4.10'
-        type: ocp
-        minVersion: '4.10.30'
-      - name: 'stable-4.10'
-        type: ocp
-        minVersion: '4.10.30'
-    graph: false
+      # name options: candidate, fast, stable, eus [example stable-4.12]
+      - name: stable-4.12
+        minVersion: '4.12.4'
+        maxVersion: '4.12.6'
+    graph: true
+
   operators:
-    - catalog: 'registry.redhat.io/redhat/redhat-operator-index:v4.8'
-      packages:
-        - name: amq-streams
-        - name: cincinnati-operator
-        - name: cluster-kube-descheduler-operator
-        - name: cluster-logging
-        - name: codeready-workspaces
-        - name: datagrid
-        - name: elasticsearch-operator
-        - name: local-storage-operator
-        - name: ocs-operator
-          channels:
-            - name: 'eus-4.8'
-              minVersion: '4.8.14'
-              maxVersion: '4.8.14'
-            - name: 'stable-4.8'
-              minVersion: '4.8.14'
-              maxVersion: '4.8.14'
-        - name: quay-operator
-        - name: red-hat-camel-k
-    - catalog: 'registry.redhat.io/redhat/redhat-operator-index:v4.10'
+    - catalog: 'registry.redhat.io/redhat/redhat-operator-index:v4.12'
       packages:
         - name: advanced-cluster-management
+          channels:
+            - name: 'release-2.7'
+              minVersion: '2.7.3'
+              maxVersion: '2.7.3'
         - name: amq-streams
-        - name: ansible-automation-platform-operator
-        - name: ansible-cloud-addons-operator
+          channels:
+            - name: 'stable'
+              minVersion: '2.3.0-1'
+              maxVersion: '2.3.0-1'
         - name: cincinnati-operator
+          channels:
+            - name: 'v1'
+              minVersion: '5.0.1'
+              maxVersion: '5.0.1'
         - name: cluster-kube-descheduler-operator
+          channels:
+            - name: 'stable'
+              minVersion: '4.12.0-202303081116'
+              maxVersion: '4.12.0-202303081116'
         - name: cluster-logging
-        - name: codeready-workspaces
+          channels:
+            - name: 'stable'
+              minVersion: '5.6.3'
+              maxVersion: '5.6.3'
         - name: datagrid
+          channels:
+            - name: '8.4.x'
+              minVersion: '8.4.4'
+              maxVersion: '8.4.4'
+            - name: '8.3.x'
+              minVersion: '8.3.9'
+              maxVersion: '8.3.9'
         - name: elasticsearch-operator
-        - name: jaeger-product
-        - name: kiali-ossm
+          channels:
+            - name: 'stable'
+              minVersion: '5.6.3'
+              maxVersion: '5.6.3'
         - name: kubernetes-nmstate-operator
+          channels:
+            - name: 'stable'
+              minVersion: '4.12.0-202302280915'
+              maxVersion: '4.12.0-202302280915'
         - name: local-storage-operator
+          channels:
+            - name: 'stable'
+              minVersion: '4.12.0-202303081116'
+              maxVersion: '4.12.0-202303081116'
         - name: mcg-operator
           channels:
-            - name: 'stable-4.10'
-              minVersion: '4.10.5'
-              maxVersion: '4.10.5'
-        - name: ocs-operator
-          channels:
-            - name: 'stable-4.10'
-              minVersion: '4.10.5'
-              maxVersion: '4.10.5'
-        - name: odf-csi-addons-operator
-          channels:
-            - name: 'stable-4.10'
-              minVersion: '4.10.5'
-              maxVersion: '4.10.5'
-        - name: odf-lvm-operator
-          channels:
-            - name: 'stable-4.10'
-              minVersion: '4.10.5'
-              maxVersion: '4.10.5'
-        - name: odf-multicluster-orchestrator
-          channels:
-            - name: 'stable-4.10'
-              minVersion: '4.10.5'
-              maxVersion: '4.10.5'
+            - name: 'stable-4.12'
+              minVersion: '4.12.1'
+              maxVersion: '4.12.1'
         - name: odf-operator
           channels:
-            - name: 'stable-4.10'
-              minVersion: '4.10.5'
-              maxVersion: '4.10.5'
+            - name: 'stable-4.12'
+              minVersion: '4.12.1'
+              maxVersion: '4.12.1'
+        - name: odf-csi-addons-operator
+          channels:
+            - name: 'stable-4.12'
+              minVersion: '4.12.1'
+              maxVersion: '4.12.1'
         - name: quay-operator
-        - name: red-hat-camel-k
-        - name: rhacs-operator
-        - name: servicemeshoperator
+          channels:
+            - name: 'stable-3.8'
+              minVersion: '3.8.6'
+              maxVersion: '3.8.6'
+    - catalog: 'registry.redhat.io/redhat/redhat-marketplace-index:v4.12'
+      packages:
+        - name: falcon-operator-rhmp
+          channels:
+            - name: 'alpha'
+              minVersion: '0.6.3'
+              maxVersion: '0.6.3'
+
   additionalImages:
     # Red Hat troubleshooting images
     - name: registry.redhat.io/rhel8/support-tools:latest
@@ -106,28 +103,26 @@ mirror:
     # Data collection for OpenShift Serverless
     #- name: registry.redhat.io/openshift-serverless-1/svls-must-gather-rhel8:latest
     # Data collection for Red Hat OpenShift Service Mesh
-    #- name: registry.redhat.io/openshift-service-mesh/istio-must-gather-rhel8:latest
+    - name: registry.redhat.io/openshift-service-mesh/istio-must-gather-rhel8:latest
     # Data collection for the Migration Toolkit for Containers
     #- name: registry.redhat.io/rhmtc/openshift-migration-must-gather-rhel8:v1.7
     # Data collection for Red Hat OpenShift Container Storage
-    - name: registry.redhat.io/ocs4/ocs-must-gather-rhel8:v4.8
+    #- name: registry.redhat.io/ocs4/ocs-must-gather-rhel8:v4.8
     # Data collection for Red Hat OpenShift Data Foundation
-    - name: registry.redhat.io/odf4/ocs-must-gather-rhel8:v4.9
-    - name: registry.redhat.io/odf4/ocs-must-gather-rhel8:v4.10
+    #- name: registry.redhat.io/odf4/ocs-must-gather-rhel8:v4.9
+    - name: registry.redhat.io/odf4/ocs-must-gather-rhel8:v4.12
     # Data collection for OpenShift Logging
     - name: registry.redhat.io/openshift-logging/cluster-logging-rhel8-operator:latest
     # Data collection for Local Storage Operator
     - name: registry.redhat.io/openshift4/ose-local-storage-mustgather-rhel8:latest
     # OCP origin-cli images
-    - name: quay.io/openshift/origin-cli:4.8
-    - name: quay.io/openshift/origin-cli:4.10
+    - name: quay.io/openshift/origin-cli:4.12
     - name: quay.io/openshift/origin-cli:latest
     # Netowrk troubleshooting image
     - name: docker.io/wbitt/network-multitool:latest
     # ubi8 images
     - name: registry.redhat.io/ubi8/ubi:latest
     # F5 bigip-ctlr
-    - name: docker.io/f5networks/k8s-bigip-ctlr:2.7.1
-    - name: docker.io/f5networks/k8s-bigip-ctlr:2.8.1
-    - name: docker.io/f5networks/k8s-bigip-ctlr:2.10.0
-    
+    - name: docker.io/f5networks/k8s-bigip-ctlr:2.10.1
+    # Used for ldap-sync
+    - name: registry.redhat.io/openshift4/ose-cli:latest
