@@ -76,5 +76,5 @@ If you need to disable noobaa - need to fix this, it doesnt work
 oc patch storagecluster ocs-storagecluster -n openshift-storage --type json --patch '[{ "op": "add", "path": "/spec/multiCloudGateway/reconcileStrategy", "value": ignore }]'
 ----
 
-Apply infrastructure tollerations, if needed
+Apply infrastructure tolerations, if needed
 
