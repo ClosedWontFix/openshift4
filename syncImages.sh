@@ -1,18 +1,24 @@
 #!/bin/bash
 
 OCMIRROR=/usr/local/bin/oc-mirror
+# Set temp directory - Need ~5GB free space
 TMPDIR=/registry/tmp
 DATE=$(date +%Y%m%d-%H%M%S)
-CONFIG=/root/imageset-config-4.11.yaml
-REGISTRY=registry.clustername.example.com
-NAMESPACE=namespace/repository
+CONFIG=/root/imageset-config.yaml
+REGISTRY=registry.example.com:5000
+NAMESPACE=registry
+# Set verbosity (0-9)
+VERBOSE=0
 
-cd $TMPDIR
+[[ -d ${TMPDIR} ]] || mkdir ${TMPDIR}
+cd ${TMPDIR}
 
-$OCMIRROR \
-  --config $CONFIG \
+time \
+${OCMIRROR} \
+  --config ${CONFIG} \
   --dest-skip-tls \
-  --continue-on-error \
+  --source-skip-tls \
   --skip-missing \
-  --verbose 9 \
-  docker://$REGISTRY/$NAMESPACE 2>&1 | tee $TMPDIR/mirror-$DATE.log
+  --continue-on-error \
+  --verbose ${VERBOSE} \
+  docker://${REGISTRY}/${NAMESPACE} 2>&1 | tee ${TMPDIR}/mirror-${DATE}.log
