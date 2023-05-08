@@ -60,5 +60,5 @@ oc get sub -A --no-headers | awk '{ print $1" "$2 }' | while read sub
 Approve pending installPlans
 [source,bash]
 ----
-oc patch installplan $(oc get ip -o=jsonpath='{.items[?(@.spec.approved==false)].metadata.name}') --type merge --patch '{\"spec\":{\"approved\":true}}'
+oc patch installplan $(oc get ip -o=jsonpath='{.items[?(@.spec.approved==false)].metadata.name}') --type merge --patch '{"spec":{"approved":true}}'
 ----
