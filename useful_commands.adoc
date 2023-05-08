@@ -46,3 +46,13 @@ openssl s_client -connect test.apps.<cluster_name>.<domain>:443 < /dev/null | op
 openssl s_client -connect test.apps.<cluster_name>.<domain>:443 < /dev/null | openssl x509 -text | grep 'DNS:'
 
 ----
+
+
+Set all operator subscriptions to Manual
+[source,bash]
+----
+oc get sub -A --no-headers | awk '{ print "-n "$1" "$2 }' | while read sub
+  do
+    oc patch subscription $sub --type='merge' --patch '{"spec":{"installPlanApproval":"Manual"}}'
+  done
+----
