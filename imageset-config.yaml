@@ -2,7 +2,7 @@ apiVersion: mirror.openshift.io/v1alpha2
 kind: ImageSetConfiguration
 storageConfig:
   registry:
-    imageURL: '10.172.192.208:5000/registry:latest'
+    imageURL: 'registry.example.com:5000/registry:latest'
     skipTLS: true
 mirror:
   platform:

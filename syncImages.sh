@@ -5,7 +5,7 @@ OCMIRROR=/usr/local/bin/oc-mirror
 TMPDIR=/home/registry/tmp
 DATE=$(date +%Y%m%d-%H%M%S)
 CONFIG=/home/registry/imageset-config.yaml
-REGISTRY=10.172.192.208:5000
+REGISTRY=registry.example.com:5000
 NAMESPACE=registry
 # Set verbosity (0-9)
 VERBOSE=0
