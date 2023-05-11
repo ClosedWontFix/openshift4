@@ -1,0 +1,43 @@
+#
+# Docker Registry
+# /etc/docker/registry/config.yaml
+# https://docs.docker.com/registry/configuration
+#
+#
+
+version: 0.1
+log:
+  fields:
+    service: registry
+storage:
+  cache:
+    blobdescriptor: inmemory
+  delete:
+    enabled: true
+  filesystem:
+    rootdirectory: /var/lib/registry
+http:
+  addr: :5000
+  headers:
+    X-Content-Type-Options: [nosniff]
+    Strict-Transport-Security: [max-age=0]
+  http2:
+    disabled: false
+      #  tls:
+      #    certificate: /certs/domain.crt
+      #    ciphersuites:
+      #      - TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+      #      - TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+      #      - TLS_AES_128_GCM_SHA256
+      #      - TLS_AES_256_GCM_SHA384
+      #    key: /certs/domain.key
+      #    minimumtls: "tls1.2"
+      #auth:
+      #  htpasswd:
+      #    realm: "Registry Realm"
+      #    path: /auth/htpasswd
+health:
+  storagedriver:
+    enabled: true
+    interval: 10s
+    threshold: 3

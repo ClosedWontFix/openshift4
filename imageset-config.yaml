@@ -2,7 +2,7 @@ apiVersion: mirror.openshift.io/v1alpha2
 kind: ImageSetConfiguration
 storageConfig:
   registry:
-    imageURL: 'registry.example.com:5000/registry:latest'
+    imageURL: '10.172.192.208:5000/registry:latest'
     skipTLS: true
 mirror:
   platform:
@@ -41,6 +41,9 @@ mirror:
         - name: cluster-logging
           channels:
             - name: 'stable'
+              minVersion: '5.7.0'
+              maxVersion: '5.7.0'
+            - name: 'stable-5.6'
               minVersion: '5.6.3'
               maxVersion: '5.6.3'
         - name: datagrid
@@ -54,6 +57,9 @@ mirror:
         - name: elasticsearch-operator
           channels:
             - name: 'stable'
+              minVersion: '5.7.0'
+              maxVersion: '5.7.0'
+            - name: 'stable-5.6'
               minVersion: '5.6.3'
               maxVersion: '5.6.3'
         - name: kubernetes-nmstate-operator
@@ -90,6 +96,9 @@ mirror:
       packages:
         - name: falcon-operator-rhmp
           channels:
+            - name: 'certified-0.8'
+              minVersion: '0.8.0'
+              maxVersion: '0.8.0'
             - name: 'alpha'
               minVersion: '0.6.3'
               maxVersion: '0.6.3'
@@ -126,3 +135,4 @@ mirror:
     - name: docker.io/f5networks/k8s-bigip-ctlr:2.10.1
     # Used for ldap-sync
     - name: registry.redhat.io/openshift4/ose-cli:latest
+
