@@ -7,6 +7,9 @@ https://access.redhat.com/articles/6525111
 Delete the StorageCluster object.
 [source,bash]
 ----
+oc delete -n openshift-storage storagesystem --all --wait=true
+
+
 oc delete -n openshift-storage storagecluster --all --wait=true
 ----
 
