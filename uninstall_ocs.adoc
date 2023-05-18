@@ -34,6 +34,13 @@ Delete ODF PVs
 ----
 oc get pv | grep ocs | awk '{ print $1 }' | xargs oc delete pv
 ----
+
+Delete noobaa storageClass
+[source,bash]
+----
+oc delete storageclass openshift-storage.noobaa.io --wait=true --timeout=5m
+----
+
 Remove CustomResourceDefinitions
 [source,bash]
 ----
