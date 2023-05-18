@@ -44,7 +44,8 @@ oc delete storageclass openshift-storage.noobaa.io --wait=true --timeout=5m
 Remove CustomResourceDefinitions
 [source,bash]
 ----
-oc delete \
+oc delete crd \
+  backingstores.noobaa.io \
   bucketclasses.noobaa.io \
   cephblockpools.ceph.rook.io \
   cephclusters.ceph.rook.io \
@@ -52,13 +53,15 @@ oc delete \
   cephnfses.ceph.rook.io \
   cephobjectstores.ceph.rook.io \
   cephobjectstoreusers.ceph.rook.io \
-  crd backingstores.noobaa.io \
   noobaas.noobaa.io \
-  objectbucketclaims.objectbucket.io \
-  objectbuckets.objectbucket.io \
   ocsinitializations.ocs.openshift.io \
-  storageclusterinitializations.ocs.openshift.io \
   storageclusters.ocs.openshift.io \
+  cephclients.ceph.rook.io \
+  cephobjectrealms.ceph.rook.io \
+  cephobjectzonegroups.ceph.rook.io \
+  cephobjectzones.ceph.rook.io \
+  cephrbdmirrors.ceph.rook.io \
+  storagesystems.odf.openshift.io \
   --wait=true --timeout=5m
 ----
 
