@@ -109,6 +109,17 @@ Remove Symlinks from nodes
 oc delete localvolumediscoveries --all -n openshift-local-storage
 ----
 
+Delete openshift-local-storage project
+[source,bash]
+----
+oc project default
+oc delete project openshift-local-storage --wait=true --timeout=5m
+----
+
+
+
+## Reinstalling ODF
+
 When reinstalling OCS/ODF...
 Enable rook-ceph-tools
 [source,bash]
