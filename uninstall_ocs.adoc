@@ -15,6 +15,12 @@ oc delete -n openshift-storage storagesystem --all --wait=true
 oc delete -n openshift-storage storagecluster --all --wait=true
 ----
 
+[source,bash]
+----
+oc project default
+oc delete project openshift-storage --wait=true --timeout=5m
+----
+
 Remove CustomResourceDefinitions
 [source,bash]
 ----
