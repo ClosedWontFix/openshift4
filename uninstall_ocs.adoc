@@ -85,16 +85,27 @@ If the namespace is stuck in terminating status, then list the remaining resourc
 oc api-resources --verbs=list --namespaced -o name | sort | grep -Ev 'events|packagemanifest' | xargs -t -n 1 oc get --show-kind --ignore-not-found -n openshift-storage
 ----
 
+
+Delete localVolumeSets
+[source,bash]
+----
+oc delete localvolumesets --all -n openshift-local-storage
+----
+
 Delete storage classes
 [source,bash]
 ----
 oc delete storageclasses local-storage
 ----
 
-Delete localVolumeSets
+Remove Symlinks from nodes
 [source,bash]
 ----
-oc delete localvolumesets --all -n openshift-local-storage
+[[ ! -z $SC ]] && for i in 1 2 3 4; do oc debug node/ocs${i}.rch2s5mensrsocp.vzbi.com -- chroot /host rm -rfv /mnt/local-storage/${SC}/; done
+----
+
+[source,bash]
+----
 oc delete localvolumediscoveries --all -n openshift-local-storage
 ----
 
