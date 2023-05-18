@@ -21,6 +21,12 @@ oc project default
 oc delete project openshift-storage --wait=true --timeout=5m
 ----
 
+[source,bash]
+----
+oc label nodes  --all cluster.ocs.openshift.io/openshift-storage-
+oc label nodes  --all topology.rook.io/rack-
+----
+
 Remove CustomResourceDefinitions
 [source,bash]
 ----
