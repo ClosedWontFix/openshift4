@@ -29,6 +29,11 @@ oc label nodes  --all topology.rook.io/rack-
 oc adm taint nodes --all node.ocs.openshift.io/storage-
 ----
 
+Delete ODF PVs
+[source,bash]
+----
+oc get pv | grep ocs | awk '{ print $1 }' | xargs oc delete pv
+----
 Remove CustomResourceDefinitions
 [source,bash]
 ----
