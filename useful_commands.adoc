@@ -25,7 +25,7 @@ Watch cluster upgrade status
 watch "echo -e \"\nCLUSTER UPGRADE STATUS\n\"; \
   oc get clusterversion; \
   echo -e \"\nCSRS PENDING APPROVAL\n\"; \
-  oc get csr --no-headers | grep -Ev 'Approved|Issued' \
+  oc get csr --no-headers | grep -Ev \"Approved|Issued\"; \
   echo -e \"\nCLUSTER OPERATORS PENDING UPGRADE\n\"; \
   oc get co --no-headers | grep -Ev \"4.12.6.*.True.*.False.*.False\"; \
   echo -e \"\nNODES PENDING UPGRADE\n\"; \
