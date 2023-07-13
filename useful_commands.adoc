@@ -64,3 +64,9 @@ Approve pending installPlans
 ----
 oc patch installplan $(oc get ip -o=jsonpath='{.items[?(@.spec.approved==false)].metadata.name}') --type merge --patch '{"spec":{"approved":true}}'
 ----
+
+Approve Pending CSRs
+[source,bash]
+----
+oc adm certificate approve $(oc get csr --no-headers | grep Pending | awk '{ print $1 }')
+----
