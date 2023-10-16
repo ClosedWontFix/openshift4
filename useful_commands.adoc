@@ -27,7 +27,7 @@ watch "echo -e \"\nCLUSTER UPGRADE STATUS\n\"; \
   echo -e \"\nCSRS PENDING APPROVAL\n\"; \
   oc get csr --no-headers | grep -Ev \"Approved|Issued\"; \
   echo -e \"\nCLUSTER OPERATORS PENDING UPGRADE\n\"; \
-  oc get co --no-headers | grep -Ev \"4.12.6.*.True.*.False.*.False\"; \
+  oc get co --no-headers | grep -Ev \"4.12.28.*.True.*.False.*.False\"; \
   echo -e \"\nNODES PENDING UPGRADE\n\"; \
   oc get nodes --no-headers | grep -Ewi \"notready|schedulingdisabled|v1.25.4\+a34b9e9\"; \
   echo -e \"\nMACHINE CONFIG POOL STATUS\n\"; \
